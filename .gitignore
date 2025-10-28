@@ -1,0 +1,3 @@
+# Ignorar archivos sensibles y temporales
+.env
+node_modules/
