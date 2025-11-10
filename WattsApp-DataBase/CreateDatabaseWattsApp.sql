@@ -15,6 +15,7 @@ CREATE TABLE dispositivos (
     nombre_dispositivo VARCHAR(100),
     numero_serie VARCHAR(50) UNIQUE,
     ubicacion VARCHAR(100),
+    descripcion VARCHAR(255),
     id_usuario INT,
     fecha_registro DATETIME DEFAULT NOW(),
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
