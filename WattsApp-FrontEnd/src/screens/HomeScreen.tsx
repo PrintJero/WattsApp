@@ -13,7 +13,7 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
 
       <TouchableOpacity
         style={styles.card}
-        onPress={() => navigation.navigate("Dispositivos")} // 👈 AHORA SÍ
+        onPress={() => navigation.navigate("Dispositivos")}
       >
         <Text style={styles.cardTitle}>Mis dispositivos</Text>
         <Text style={styles.cardText}>

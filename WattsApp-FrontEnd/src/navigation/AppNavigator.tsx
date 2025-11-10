@@ -23,7 +23,7 @@ const AppNavigator: React.FC = () => {
       <Stack.Screen
         name="Dispositivos"
         component={DispositivosScreen}
-        options={{ headerShown: true, title: "Mis dispositivos" }} // 👈 con header
+        options={{ headerShown: true, title: "Mis dispositivos" }}
       />
     </Stack.Navigator>
   );
