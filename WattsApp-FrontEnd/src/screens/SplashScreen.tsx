@@ -5,6 +5,7 @@ import {
   ActivityIndicator,
   StyleSheet,
 } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
 
@@ -12,10 +13,25 @@ type Props = NativeStackScreenProps<RootStackParamList, "Splash">;
 
 const SplashScreen: React.FC<Props> = ({ navigation }) => {
   useEffect(() => {
-    const timer = setTimeout(() => {
-      navigation.replace("Home");
-    }, 1800);
-    return () => clearTimeout(timer);
+    let mounted = true;
+    const decide = async () => {
+      try {
+        const raw = await AsyncStorage.getItem('user');
+        if (!mounted) return;
+        if (raw) {
+          navigation.replace('Home');
+        } else {
+          navigation.replace('Login');
+        }
+      } catch (err) {
+        navigation.replace('Login');
+      }
+    };
+    const timer = setTimeout(decide, 1200);
+    return () => {
+      mounted = false;
+      clearTimeout(timer);
+    };
   }, [navigation]);
 
   return (
