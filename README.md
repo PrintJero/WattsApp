@@ -40,7 +40,7 @@ http://localhost:3000/api-docs
 (Swagger UI con toda la documentación del API)
 
 
-## 3. Configurar el Frontend (Expo)
+### 3. Configurar el Frontend (Expo)
 
 ### En otra terminal, entrar al frontend:
 cd WattsApp-FrontEnd
