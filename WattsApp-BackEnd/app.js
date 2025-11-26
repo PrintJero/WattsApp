@@ -5,6 +5,7 @@ const cors = require('cors');
 const dispositivosRoutes = require('./routes/dispositivosRoutes');
 const medicionesRoutes   = require('./routes/medicionesRoutes');
 const usuariosRoutes     = require('./routes/usuariosRoutes');
+const authRoutes         = require('./routes/authRoutes');
 
 const { swaggerUi, swaggerSpec } = require('./swagger');
 
@@ -22,6 +23,7 @@ app.get('/', (req, res) => {
 
 // Rutas principales
 app.use('/api/usuarios', usuariosRoutes);
+app.use('/api/auth', authRoutes);
 app.use('/api/dispositivos', dispositivosRoutes);
 app.use('/api/mediciones', medicionesRoutes);
 

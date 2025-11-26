@@ -1,4 +1,5 @@
 const bd = require("../config/bd");
+const bcrypt = require("bcryptjs");
 
 // GET /api/usuarios
 const getAllUsuarios = async (req, res) => {
@@ -38,9 +39,31 @@ const createUsuario = async (req, res) => {
       return res.status(400).json({ success: false, message: "nombre, correo y contraseña son obligatorios" });
     }
 
+    // Validaciones básicas
+    const emailRegex = /^\S+@\S+\.\S+$/;
+    if (!emailRegex.test(correo)) {
+      return res.status(400).json({ success: false, message: "Correo inválido" });
+    }
+    if (contraseña.length < 6) {
+      return res.status(400).json({ success: false, message: "La contraseña debe tener al menos 6 caracteres" });
+    }
+
+    // Comprobar si el correo ya existe
+    const [existing] = await bd.query(
+      "SELECT id_usuario FROM usuarios WHERE correo = ?",
+      [correo]
+    );
+    if (existing.length) {
+      return res.status(400).json({ success: false, message: "El correo ya está registrado" });
+    }
+
+    // Hashear contraseña
+    const saltRounds = 10;
+    const hashed = await bcrypt.hash(contraseña, saltRounds);
+
     const [result] = await bd.query(
       "INSERT INTO usuarios (nombre, correo, contraseña) VALUES (?, ?, ?)",
-      [nombre, correo, contraseña] // aquí podrían luego hashear la contraseña
+      [nombre, correo, hashed]
     );
 
     res.status(201).json({
