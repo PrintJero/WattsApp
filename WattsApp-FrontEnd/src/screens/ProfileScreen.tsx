@@ -22,7 +22,7 @@ const ProfileScreen: React.FC = () => {
           return;
         }
         const stored = JSON.parse(raw);
-        // stored should include id_usuario
+        // 'stored' debe incluir 'id_usuario'
         const id = stored.id_usuario || stored.id || null;
         if (!id) {
           setUser(stored);
@@ -37,7 +37,7 @@ const ProfileScreen: React.FC = () => {
           setUser(stored);
         }
 
-        // count devices for this user
+        // contar dispositivos de este usuario
         const all = await fetchDispositivos();
         if (mounted) {
           const count = all.filter((d) => d.id_usuario === Number(id)).length;

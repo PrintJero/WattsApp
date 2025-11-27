@@ -1,6 +1,5 @@
 const bd = require("../config/bd");
 
-// GET /api/dispositivos
 const getAllDispositivos = async (req, res) => {
   try {
     const [rows] = await bd.query(`
@@ -14,7 +13,6 @@ const getAllDispositivos = async (req, res) => {
   }
 };
 
-// GET /api/dispositivos/usuario/:id_usuario
 const getDispositivosByUsuario = async (req, res) => {
   try {
     const { id_usuario } = req.params;
@@ -30,7 +28,6 @@ const getDispositivosByUsuario = async (req, res) => {
   }
 };
 
-// GET /api/dispositivos/:id
 const getDispositivoById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -50,7 +47,6 @@ const getDispositivoById = async (req, res) => {
   }
 };
 
-// POST /api/dispositivos
 const createDispositivo = async (req, res) => {
   try {
     const { nombre_dispositivo, numero_serie, ubicacion, descripcion, id_usuario } = req.body;
@@ -87,21 +83,48 @@ const createDispositivo = async (req, res) => {
   }
 };
 
-// PUT /api/dispositivos/:id
 const updateDispositivo = async (req, res) => {
   try {
     const { id } = req.params;
-    const { nombre_dispositivo, numero_serie, ubicacion, descripcion } = req.body;
+    const { nombre_dispositivo, numero_serie, ubicacion, descripcion, is_online } = req.body;
+
+    // Obtener estado previo para detectar cambios en is_online
+    const [existingRows] = await bd.query(
+      "SELECT * FROM dispositivos WHERE id_dispositivo = ?",
+      [id]
+    );
+
+    if (!existingRows.length) {
+      return res.status(404).json({ success: false, message: "Dispositivo no encontrado" });
+    }
+
+    const existing = existingRows[0];
 
     const [result] = await bd.query(
       `UPDATE dispositivos
-       SET nombre_dispositivo = ?, numero_serie = ?, ubicacion = ?, descripcion = ?
+       SET nombre_dispositivo = ?, numero_serie = ?, ubicacion = ?, descripcion = ?, is_online = ?, ultimo_estado = NOW()
        WHERE id_dispositivo = ?`,
-      [nombre_dispositivo, numero_serie, ubicacion, descripcion, id]
+      [nombre_dispositivo || existing.nombre_dispositivo, numero_serie || existing.numero_serie, ubicacion || existing.ubicacion, descripcion || existing.descripcion, typeof is_online === 'undefined' ? existing.is_online : is_online, id]
     );
 
     if (!result.affectedRows) {
-      return res.status(404).json({ success: false, message: "Dispositivo no encontrado" });
+      return res.status(500).json({ success: false, message: "No se pudo actualizar el dispositivo" });
+    }
+
+    // Si cambió el estado de conexión, crear notificación
+    if (typeof is_online !== 'undefined' && Number(is_online) !== Number(existing.is_online)) {
+      const notificationType = is_online ? 'connect' : 'disconnect';
+      const title = is_online ? 'Dispositivo conectado' : 'Dispositivo desconectado';
+      const body = `${existing.nombre_dispositivo} ha ${is_online ? 'conectado' : 'desconectado'}`;
+      try {
+        await bd.query(
+          `INSERT INTO notifications (id_usuario, id_dispositivo, type, title, body, data)
+           VALUES (?, ?, ?, ?, ?, ?)`,
+          [existing.id_usuario, id, notificationType, title, body, JSON.stringify({ prev: existing.is_online, now: is_online })]
+        );
+      } catch (err) {
+        console.error('Error creando notificación:', err.message);
+      }
     }
 
     res.json({ success: true, message: "Dispositivo actualizado correctamente" });
@@ -110,7 +133,6 @@ const updateDispositivo = async (req, res) => {
   }
 };
 
-// DELETE /api/dispositivos/:id
 const deleteDispositivo = async (req, res) => {
   try {
     const { id } = req.params;

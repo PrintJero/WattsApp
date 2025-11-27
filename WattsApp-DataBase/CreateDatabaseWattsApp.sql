@@ -17,6 +17,8 @@ CREATE TABLE dispositivos (
     ubicacion VARCHAR(100),
     descripcion VARCHAR(255),
     id_usuario INT,
+    is_online TINYINT(1) DEFAULT 0,
+    ultimo_estado DATETIME DEFAULT NULL,
     fecha_registro DATETIME DEFAULT NOW(),
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
 );
@@ -30,3 +32,24 @@ CREATE TABLE mediciones (
     fecha_hora DATETIME DEFAULT NOW(),
     FOREIGN KEY (id_dispositivo) REFERENCES dispositivos(id_dispositivo)
 );
+
+CREATE TABLE notifications (
+    id_notification INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario INT NOT NULL,
+    id_dispositivo INT DEFAULT NULL,
+    type VARCHAR(50) NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    body TEXT,
+    data JSON DEFAULT NULL,
+    is_read TINYINT(1) DEFAULT 0,
+    hidden TINYINT(1) DEFAULT 0,
+    created_at DATETIME DEFAULT NOW(),
+    FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario),
+    FOREIGN KEY (id_dispositivo) REFERENCES dispositivos(id_dispositivo)
+);
+
+CREATE INDEX idx_notifications_user_read ON notifications(id_usuario, is_read);
+
+ALTER TABLE dispositivos ADD COLUMN threshold_w DECIMAL(10,3) DEFAULT NULL;
+
+UPDATE dispositivos SET threshold_w = 150 WHERE id_dispositivo = 1;

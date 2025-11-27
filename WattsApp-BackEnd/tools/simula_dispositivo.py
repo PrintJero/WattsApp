@@ -2,7 +2,7 @@
 """
 Simulador de dispositivo para WattsApp
 - Envía POST a /api/mediciones con corriente, voltaje y potencia
-- Uso: python simula_dispositivo.py --id 4 --host http://192.168.1.80:3000/api --interval 2
+- Uso: python simula_dispositivo.py --id 4 --host http://192.168.1.174:3000/api --interval 2
 """
 import time
 import random

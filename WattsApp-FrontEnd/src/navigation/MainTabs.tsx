@@ -2,7 +2,8 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { HomeScreen } from "../screens/HomeScreen";
 import AddDeviceScreen from "../screens/AddDeviceScreen";
-import CalculatorScreen from "../screens/CalculatorScreen";
+import NotificationCenter from "../screens/NotificationCenter";
+import InAppNotifier from "../components/InAppNotifier";
 import ProfileScreen from "../screens/ProfileScreen";
 import { Ionicons } from "@expo/vector-icons";
 import { Platform } from "react-native";
@@ -10,14 +11,18 @@ import { Platform } from "react-native";
 type RootTabParamList = {
   Home: undefined;
   Add: undefined;
-  Calculator: undefined;
+  Notifications: undefined;
   Profile: undefined;
 };
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
 
 const MainTabs: React.FC = () => {
+  const [unreadCount, setUnreadCount] = React.useState<number>(0);
+
   return (
+    <>
+      <InAppNotifier onUnreadCountChange={setUnreadCount} />
     <Tab.Navigator
       screenOptions={({ route }: { route: any }) => ({
         headerShown: false,
@@ -35,8 +40,8 @@ const MainTabs: React.FC = () => {
             iconName = "home";
           } else if (route.name === "Add") {
             iconName = "add-circle";
-          } else if (route.name === "Calculator") {
-            iconName = "calculator";
+          } else if (route.name === "Notifications") {
+            iconName = "notifications";
           } else if (route.name === "Profile") {
             iconName = "person-circle";
           }
@@ -46,9 +51,25 @@ const MainTabs: React.FC = () => {
     >
       <Tab.Screen name="Home" component={HomeScreen} options={{ title: "Inicio" }} />
       <Tab.Screen name="Add" component={AddDeviceScreen} options={{ title: "Agregar" }} />
-      <Tab.Screen name="Calculator" component={CalculatorScreen} options={{ title: "Calculadora" }} />
+      <Tab.Screen
+        name="Notifications"
+        component={NotificationCenter}
+        options={{
+          title: "Notificaciones",
+          // mostrar un punto en lugar de un número cuando hay notificaciones sin leer
+          tabBarBadge: unreadCount ? '' : undefined,
+          tabBarBadgeStyle: {
+            minWidth: 8,
+            height: 8,
+            borderRadius: 8,
+            backgroundColor: '#ff3b30',
+            marginTop: 4,
+          },
+        }}
+      />
       <Tab.Screen name="Profile" component={ProfileScreen} options={{ title: "Perfil" }} />
     </Tab.Navigator>
+    </>
   );
 };
 

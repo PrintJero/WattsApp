@@ -117,16 +117,16 @@ const MedicionesScreen: React.FC<Props> = ({ route, navigation }) => {
       const tb = b.t || null;
       if (ta && tb && ta > tb) {
         const dtSec = (ta - tb) / 1000;
-        // trapezoid area: average power * time
+        // área trapezoidal: potencia promedio * tiempo
         const avgP = (pa + pb) / 2;
         totalWh += (avgP * dtSec) / 3600; // W * s -> Wh
       }
     }
 
-    // If only one reading or timestamps missing, approximate using average and polling interval
+    // Si sólo hay una lectura o faltan timestamps, aproximar con promedio e intervalo de sondeo
     if (items.length === 1 || totalWh === 0) {
       const avgP = items.reduce((s, x) => s + (Number(x.potencia) || 0), 0) / items.length;
-      const approxSec = Math.max(3, (items.length - 1) * 3); // approximate window
+      const approxSec = Math.max(3, (items.length - 1) * 3); // ventana aproximada
       totalWh = (avgP * approxSec) / 3600;
     }
 
@@ -274,7 +274,6 @@ const MedicionesScreen: React.FC<Props> = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#020817" translucent />
-      {/* Header mejorado */}
       <View style={[styles.customHeader, { paddingTop: (insets.top || 0) + 12, paddingBottom: 12 }]}> 
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
           <Ionicons name="chevron-back" size={28} color="#22c55e" />
@@ -295,7 +294,7 @@ const MedicionesScreen: React.FC<Props> = ({ route, navigation }) => {
         </TouchableOpacity>
       </View>
 
-      {/* Menú desplegable (posicionado encima) */}
+      
       {menuVisible && (
         <View style={[styles.dropdownMenu, { position: 'absolute', top: (insets.top || 0) + 12 + 48, right: 12, zIndex: 50, elevation: 50 }]}> 
           <TouchableOpacity style={styles.menuItem} onPress={openEditModal}>
@@ -318,7 +317,7 @@ const MedicionesScreen: React.FC<Props> = ({ route, navigation }) => {
           <Text style={styles.contentTitle}>Mediciones</Text>
           <Text style={styles.contentSubtitle}>Lectura en tiempo real del dispositivo</Text>
 
-          {/* Última medición */}
+                  
           {mediciones && mediciones.length > 0 ? (
             (() => {
               const latest = mediciones[0];
@@ -340,7 +339,7 @@ const MedicionesScreen: React.FC<Props> = ({ route, navigation }) => {
                     {fecha ? <Text style={styles.timestamp}>Última: {new Date(fecha).toLocaleString()}</Text> : null}
                   </View>
 
-                  {/* Historial compacto */}
+                  
                   <View style={styles.historyContainer}>
                     <Text style={styles.historyTitle}>Historial reciente</Text>
                     {mediciones.slice(0, 6).map((m: any) => (
@@ -351,7 +350,7 @@ const MedicionesScreen: React.FC<Props> = ({ route, navigation }) => {
                     ))}
                   </View>
 
-                  {/* Consumo estimado y sparkline */}
+                  
                   <View style={styles.consumoContainer}>
                     <Text style={styles.consumoLabel}>Consumo estimado (área aproximada)</Text>
                     <Text style={styles.consumoValue}>{consumoWh !== null ? `${consumoWh} Wh` : '—'}</Text>
@@ -364,7 +363,7 @@ const MedicionesScreen: React.FC<Props> = ({ route, navigation }) => {
                       })}
                     </View>
 
-                    {/* Verificación removida en UI (solo para debug). */}
+                    
                   </View>
                 </>
               );
@@ -387,7 +386,7 @@ const MedicionesScreen: React.FC<Props> = ({ route, navigation }) => {
         </View>
       </ScrollView>
 
-      {/* Modal de Edición */}
+      
       <Modal
         visible={modalVisible}
         animationType="slide"
@@ -415,7 +414,7 @@ const MedicionesScreen: React.FC<Props> = ({ route, navigation }) => {
                 </Text>
               )}
 
-              {/* Campo: Nombre */}
+              
               <Text style={styles.label}>Nombre del Dispositivo</Text>
               <TextInput
                 value={nombre}
@@ -426,7 +425,7 @@ const MedicionesScreen: React.FC<Props> = ({ route, navigation }) => {
                 editable={!loading}
               />
 
-              {/* Campo: Número de Serie */}
+              
               <Text style={styles.label}>Número de Serie</Text>
               <TextInput
                 value={numeroSerie}
@@ -437,7 +436,7 @@ const MedicionesScreen: React.FC<Props> = ({ route, navigation }) => {
                 editable={!loading}
               />
 
-              {/* Campo: Ubicación */}
+              
               <Text style={styles.label}>Ubicación</Text>
               <TextInput
                 value={ubicacion}
@@ -448,7 +447,7 @@ const MedicionesScreen: React.FC<Props> = ({ route, navigation }) => {
                 editable={!loading}
               />
 
-              {/* Campo: Descripción */}
+              
               <Text style={styles.label}>Descripción</Text>
               <TextInput
                 value={descripcion}
@@ -461,7 +460,7 @@ const MedicionesScreen: React.FC<Props> = ({ route, navigation }) => {
                 editable={!loading}
               />
 
-              {/* Botón Guardar */}
+              
               <TouchableOpacity
                 style={[styles.saveButton, loading && styles.buttonDisabled]}
                 onPress={handleEditarDispositivo}
@@ -481,7 +480,7 @@ const MedicionesScreen: React.FC<Props> = ({ route, navigation }) => {
         </KeyboardAvoidingView>
       </Modal>
 
-      {/* Modal de Confirmación de Eliminación */}
+      
       <Modal
         visible={deleteModalVisible}
         animationType="fade"

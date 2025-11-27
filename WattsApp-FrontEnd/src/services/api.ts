@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://172.20.10.2:3000/api";
+export const API_BASE_URL = "http://192.168.1.174:3000/api";
 
 export interface Dispositivo {
   id_dispositivo: number;

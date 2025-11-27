@@ -110,7 +110,7 @@ const AddDeviceScreen: React.FC = () => {
             <Text style={styles.successMessage}>¡Dispositivo agregado exitosamente!</Text>
           ) : null}
 
-          {/* Campo: Nombre del Dispositivo */}
+          
           <Text style={styles.label}>Nombre del Dispositivo *</Text>
           <TextInput
             value={nombre}
@@ -121,7 +121,7 @@ const AddDeviceScreen: React.FC = () => {
             editable={!loading}
           />
 
-          {/* Campo: Número de Serie */}
+          
           <Text style={styles.label}>Número de Serie *</Text>
           <TextInput
             value={numeroSerie}
@@ -132,7 +132,7 @@ const AddDeviceScreen: React.FC = () => {
             editable={!loading}
           />
 
-          {/* Campo: Ubicación (Opcional) */}
+          
           <Text style={styles.label}>Ubicación (Opcional)</Text>
           <TextInput
             value={ubicacion}
@@ -143,7 +143,7 @@ const AddDeviceScreen: React.FC = () => {
             editable={!loading}
           />
 
-          {/* Campo: Descripción (Opcional) */}
+          
           <Text style={styles.label}>Descripción (Opcional)</Text>
           <TextInput
             value={descripcion}
@@ -156,7 +156,7 @@ const AddDeviceScreen: React.FC = () => {
             editable={!loading}
           />
 
-          {/* Botón Agregar */}
+          
           <TouchableOpacity
             style={[styles.button, loading && styles.buttonDisabled]}
             onPress={onSubmit}
@@ -169,7 +169,7 @@ const AddDeviceScreen: React.FC = () => {
             )}
           </TouchableOpacity>
 
-          {/* Nota sobre campos requeridos */}
+          
           <Text style={styles.note}>
             * Los campos marcados con asterisco son obligatorios
           </Text>

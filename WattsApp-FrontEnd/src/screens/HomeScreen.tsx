@@ -49,7 +49,7 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
       setDispositivos(data);
       // Cargar última medición para cada dispositivo (por lotes)
       try {
-        // fetch only the first visible window (first 5) to populate UI faster
+        // obtener sólo la primera ventana visible (primeros 5) para poblar la UI más rápido
         await fetchLatestBatch(data.slice(0, 5));
       } catch (err) {
         console.log('Error al cargar últimas mediciones:', err);
@@ -74,7 +74,7 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
   const fetchLatestBatch = React.useCallback(async (devices: Dispositivo[], batchSize = 5) => {
     for (let i = 0; i < devices.length; i += batchSize) {
       const slice = devices.slice(i, i + batchSize);
-      // mark loading
+      // marcar carga
       setLatestLoading((prev) => {
         const next = { ...prev };
         slice.forEach((d) => (next[d.id_dispositivo] = true));
@@ -92,7 +92,7 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
         })
       );
 
-      // update map only if potencia value actually changed
+      // actualizar el mapa sólo si el valor de potencia cambió realmente
       const updatesToApply: Record<number, Medicion | null> = {};
       const now = Date.now();
 
@@ -100,7 +100,7 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
         const newVal = r.latest?.potencia ?? null;
         const prevVal = prevValuesRef.current[r.id] ?? null;
 
-        // Only update if value changed
+        // Actualizar sólo si el valor cambió
         if (Number(newVal) !== Number(prevVal)) {
           updatesToApply[r.id] = r.latest;
           prevValuesRef.current[r.id] = newVal ? Number(newVal) : null;
@@ -110,12 +110,12 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
         }
       });
 
-      // Only update state if there are actual changes
+      // Actualizar el estado sólo si hay cambios reales
       if (Object.keys(updatesToApply).length > 0) {
         setLatestMap((prev) => ({ ...prev, ...updatesToApply }));
       }
 
-      // clear loading for slice
+      // limpiar indicador de carga para este bloque
       setLatestLoading((prev) => {
         const next = { ...prev };
         slice.forEach((d) => delete next[d.id_dispositivo]);

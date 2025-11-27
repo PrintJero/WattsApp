@@ -1,7 +1,6 @@
 const bd = require("../config/bd");
 const bcrypt = require("bcryptjs");
 
-// GET /api/usuarios
 const getAllUsuarios = async (req, res) => {
   try {
     const [rows] = await bd.query("SELECT id_usuario, nombre, correo, fecha_registro FROM usuarios");
@@ -11,7 +10,6 @@ const getAllUsuarios = async (req, res) => {
   }
 };
 
-// GET /api/usuarios/:id
 const getUsuarioById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -30,7 +28,6 @@ const getUsuarioById = async (req, res) => {
   }
 };
 
-// POST /api/usuarios
 const createUsuario = async (req, res) => {
   try {
     const { nombre, correo, contraseña } = req.body;
@@ -78,7 +75,6 @@ const createUsuario = async (req, res) => {
   }
 };
 
-// PUT /api/usuarios/:id
 const updateUsuario = async (req, res) => {
   try {
     const { id } = req.params;
@@ -99,7 +95,6 @@ const updateUsuario = async (req, res) => {
   }
 };
 
-// DELETE /api/usuarios/:id
 const deleteUsuario = async (req, res) => {
   try {
     const { id } = req.params;
