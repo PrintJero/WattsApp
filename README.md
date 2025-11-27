@@ -35,7 +35,7 @@ npx nodemon app.js
 
 
 ##### Abrir en el navegador:
-http://localhost:3000/api-docs
+http://IP_DISPOSITIVO:3000/api-docs
 
 (Swagger UI con toda la documentación del API)
 
@@ -48,11 +48,15 @@ cd WattsApp-FrontEnd
 ### Instalar dependencias:
 npm install
 
+### Cambiar const API_BASE_URL
+se debe cambiar la const API_BASE_URL del archivo api.ts, se encuentra en frontend, src, services, se cambia por la ip del dispositvio donde se correra, "export const API_BASE_URL = "http://IP_DISPOSITIVO:3000/api";"
 
 ### Iniciar la app:
 npx expo start
 Escanear el QR o abrir en el emulador Android/iOS.
 
+### Simulador de mediciones
+Para correr el simluador de mediciones se necesita entrar desde la terminal al backedn y luego a tools, luego se instalan los paqutes con: pip install dotenv, para finalizar se corre el codigo comentado con el link ya actualizado
 ## Integrantes del equipo
 
 Francisco Garcia
