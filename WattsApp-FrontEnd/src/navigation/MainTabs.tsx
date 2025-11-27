@@ -7,12 +7,19 @@ import ProfileScreen from "../screens/ProfileScreen";
 import { Ionicons } from "@expo/vector-icons";
 import { Platform } from "react-native";
 
-const Tab = createBottomTabNavigator();
+type RootTabParamList = {
+  Home: undefined;
+  Add: undefined;
+  Calculator: undefined;
+  Profile: undefined;
+};
+
+const Tab = createBottomTabNavigator<RootTabParamList>();
 
 const MainTabs: React.FC = () => {
   return (
     <Tab.Navigator
-      screenOptions={({ route }) => ({
+      screenOptions={({ route }: { route: any }) => ({
         headerShown: false,
         tabBarActiveTintColor: "#22c55e",
         tabBarInactiveTintColor: "#94a3b8",
@@ -22,7 +29,7 @@ const MainTabs: React.FC = () => {
           height: Platform.OS === "ios" ? 88 : 64,
           paddingBottom: Platform.OS === "ios" ? 20 : 10,
         },
-        tabBarIcon: ({ color, size }) => {
+        tabBarIcon: ({ color, size }: { color: string; size: number }) => {
           let iconName: any = "home";
           if (route.name === "Home") {
             iconName = "home";

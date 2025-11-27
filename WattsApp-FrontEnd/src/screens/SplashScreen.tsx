@@ -4,14 +4,17 @@ import {
   Text,
   ActivityIndicator,
   StyleSheet,
+  StatusBar,
 } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type Props = NativeStackScreenProps<RootStackParamList, "Splash">;
 
 const SplashScreen: React.FC<Props> = ({ navigation }) => {
+  const insets = useSafeAreaInsets();
   useEffect(() => {
     let mounted = true;
     const decide = async () => {
@@ -35,7 +38,8 @@ const SplashScreen: React.FC<Props> = ({ navigation }) => {
   }, [navigation]);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: (insets.top || 0) + 12 }]}> 
+      <StatusBar barStyle="light-content" backgroundColor="#020817" translucent />
       <Text style={styles.logo}>WattsApp</Text>
       <Text style={styles.subtitle}>Monitorea tu consumo de energía</Text>
       <ActivityIndicator size="large" color="#22c55e" />

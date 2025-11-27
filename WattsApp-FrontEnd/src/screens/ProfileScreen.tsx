@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Alert, ActivityIndicator } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Alert, ActivityIndicator, StatusBar } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { getUsuarioById, fetchDispositivos } from '../services/api';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const ProfileScreen: React.FC = () => {
   const navigation = useNavigation<any>();
+  const insets = useSafeAreaInsets();
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<any | null>(null);
   const [devicesCount, setDevicesCount] = useState<number>(0);
@@ -62,7 +64,8 @@ const ProfileScreen: React.FC = () => {
 
   if (loading) {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, { paddingTop: (insets.top || 0) + 12 }]}>
+        <StatusBar barStyle="light-content" backgroundColor="#020817" translucent />
         <ActivityIndicator size="large" color="#22c55e" />
       </View>
     );
@@ -81,7 +84,8 @@ const ProfileScreen: React.FC = () => {
   const displayName = user?.nombre || 'Perfil';
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: (insets.top || 0) + 12 }]}>
+      <StatusBar barStyle="light-content" backgroundColor="#020817" translucent />
       <View style={styles.header}>
         <View style={styles.avatar}>
           <Text style={styles.avatarText}>{user?.nombre ? user.nombre.charAt(0).toUpperCase() : 'W'}</Text>

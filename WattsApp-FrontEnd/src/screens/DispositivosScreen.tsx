@@ -7,6 +7,8 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { StatusBar } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
 import { fetchDispositivos, Dispositivo } from "../services/api";
@@ -14,6 +16,7 @@ import { fetchDispositivos, Dispositivo } from "../services/api";
 type Props = NativeStackScreenProps<RootStackParamList, "Dispositivos">;
 
 const DispositivosScreen: React.FC<Props> = () => {
+  const insets = useSafeAreaInsets();
   const [dispositivos, setDispositivos] = useState<Dispositivo[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -43,7 +46,8 @@ const DispositivosScreen: React.FC<Props> = () => {
   );
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: (insets.top || 0) + 12 }]}>      
+      <StatusBar barStyle="light-content" backgroundColor="#020817" translucent />
       <Text style={styles.title}>Mis dispositivos</Text>
 
       {loading && dispositivos.length === 0 ? (

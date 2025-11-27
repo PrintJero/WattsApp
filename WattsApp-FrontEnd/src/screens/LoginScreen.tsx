@@ -9,15 +9,18 @@ import {
   KeyboardAvoidingView,
   Platform,
   InteractionManager,
+  StatusBar,
 } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
 import { login as apiLogin } from "../services/api";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type Props = NativeStackScreenProps<RootStackParamList, "Login">;
 
 const LoginScreen: React.FC<Props> = ({ navigation }) => {
+  const insets = useSafeAreaInsets();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -57,9 +60,10 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
 
   return (
     <KeyboardAvoidingView
-      style={styles.container}
+      style={[styles.container, { paddingTop: (insets.top || 0) + 12 }]}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
+      <StatusBar barStyle="light-content" backgroundColor="#020817" translucent />
       <View style={styles.card}>
         <Text style={styles.title}>WattsApp</Text>
         <Text style={styles.subtitle}>Inicia sesión para continuar</Text>
