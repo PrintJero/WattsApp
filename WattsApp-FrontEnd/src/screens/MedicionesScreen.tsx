@@ -68,7 +68,6 @@ const MedicionesScreen: React.FC<Props> = ({ route, navigation }) => {
     cargarDispositivo();
   }, [id_dispositivo]);
 
-  // Polling de mediciones (cada X segundos)
   useEffect(() => {
     let mounted = true;
     let timer: any = null;
@@ -106,7 +105,6 @@ const MedicionesScreen: React.FC<Props> = ({ route, navigation }) => {
       .map((m) => ({ ...m, t: m.fecha_hora ? new Date(m.fecha_hora).getTime() : null }))
       .sort((a, b) => (b.t || 0) - (a.t || 0));
 
-    // Si no hay timestamps, aproximamos consumo con promedio y tiempo entre lecturas
     let totalWh = 0;
     for (let i = 0; i < items.length - 1; i++) {
       const a = items[i];
@@ -117,13 +115,11 @@ const MedicionesScreen: React.FC<Props> = ({ route, navigation }) => {
       const tb = b.t || null;
       if (ta && tb && ta > tb) {
         const dtSec = (ta - tb) / 1000;
-        // área trapezoidal: potencia promedio * tiempo
         const avgP = (pa + pb) / 2;
-        totalWh += (avgP * dtSec) / 3600; // W * s -> Wh
+        totalWh += (avgP * dtSec) / 3600;
       }
     }
 
-    // Si sólo hay una lectura o faltan timestamps, aproximar con promedio e intervalo de sondeo
     if (items.length === 1 || totalWh === 0) {
       const avgP = items.reduce((s, x) => s + (Number(x.potencia) || 0), 0) / items.length;
       const approxSec = Math.max(3, (items.length - 1) * 3); // ventana aproximada
@@ -147,7 +143,6 @@ const MedicionesScreen: React.FC<Props> = ({ route, navigation }) => {
         // Si la última lectura tiene menos de 15 segundos, consideramos conectado
         setIsConnected(diff <= 15000);
       } else {
-        // Si no hay timestamps pero hay lecturas, asumimos conectado
         setIsConnected(true);
       }
     };
@@ -325,7 +320,7 @@ const MedicionesScreen: React.FC<Props> = ({ route, navigation }) => {
               const voltaje = Number(latest.voltaje) || 0;
               const corriente = Number(latest.corriente) || 0;
               const fecha = latest.fecha_hora || latest.fecha_medicion || '';
-              const maxPower = 2000; // valor para normalizar la barra (W) — ajustar según hardware
+              const maxPower = 2000;
               const pct = Math.min(1, potencia / maxPower);
 
               return (

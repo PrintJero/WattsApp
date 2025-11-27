@@ -63,7 +63,6 @@ const ensureSchema = async () => {
       )
     `);
 
-    // Add columns to dispositivos if not exist (MySQL 8+ supports IF NOT EXISTS)
     try {
       await bd.query(`ALTER TABLE dispositivos ADD COLUMN IF NOT EXISTS is_online TINYINT(1) DEFAULT 0`);
       await bd.query(`ALTER TABLE dispositivos ADD COLUMN IF NOT EXISTS ultimo_estado DATETIME DEFAULT NULL`);
@@ -75,15 +74,12 @@ const ensureSchema = async () => {
         // ignorar si no está soportado
       }
     } catch (e) {
-      // Si ALTER con IF NOT EXISTS no está soportado, ignorar errores
       console.warn('Warning: could not run ALTER TABLE with IF NOT EXISTS - your MySQL version may not support it.');
     }
 
-    // Create index if not exists (best effort)
     try {
       await bd.query(`CREATE INDEX IF NOT EXISTS idx_notifications_user_read ON notifications(id_usuario, is_read)`);
     } catch (e) {
-      // ignore if not supported
     }
 
     console.log('DB schema check complete');
@@ -94,13 +90,12 @@ const ensureSchema = async () => {
 
 ensureSchema().then(() => {
   app.listen(port, () => console.log("Servidor desde puerto " + port));
-  // Iniciar comprobador periódico para detectar desconexiones por inactividad
   const DISCONNECT_TIMEOUT_SECONDS = Number(process.env.DISCONNECT_TIMEOUT_SECONDS || 60);
   const CHECK_INTERVAL_MS = Number(process.env.DISCONNECT_CHECK_INTERVAL_MS || 30000);
 
   setInterval(async () => {
     try {
-      // Encontrar dispositivos marcados como online cuya 'ultimo_estado' es anterior al timeout (o NULL)
+      // Encontrar dispositivos marcados como online cuya 'ultimo_estado' es anterior al timeout
       const [rows] = await bd.query(
         `SELECT id_dispositivo, nombre_dispositivo, id_usuario, ultimo_estado
          FROM dispositivos

@@ -53,3 +53,5 @@ CREATE INDEX idx_notifications_user_read ON notifications(id_usuario, is_read);
 ALTER TABLE dispositivos ADD COLUMN threshold_w DECIMAL(10,3) DEFAULT NULL;
 
 UPDATE dispositivos SET threshold_w = 150 WHERE id_dispositivo = 1;
+
+ALTER TABLE notifications ADD COLUMN hidden TINYINT(1) DEFAULT 0;

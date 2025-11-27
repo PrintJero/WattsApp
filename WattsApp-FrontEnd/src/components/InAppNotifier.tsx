@@ -47,9 +47,7 @@ const InAppNotifier: React.FC<Props> = ({ onUnreadCountChange, pollIntervalMs = 
             const summary = recent.type === 'connect' ? 'Dispositivo conectado' : recent.type === 'disconnect' ? 'Dispositivo desconectado' : (recent.type === 'over_threshold' ? 'Consumo por encima del umbral' : recent.title);
             setToast({ title: recent.title, body: recent.body || undefined, device: deviceData, summary });
             newItems.forEach(it => seenIds.current.add(it.id_notification));
-            // Emitir evento para que NotificationCenter se actualice inmediatamente
             try { DeviceEventEmitter.emit('notificationsUpdated'); } catch (e) { /* ignorar errores */ }
-            // limpiar automáticamente el toast después de unos segundos para permitir mostrar notificaciones posteriores
             setTimeout(() => setToast(null), 4500);
           }
         }

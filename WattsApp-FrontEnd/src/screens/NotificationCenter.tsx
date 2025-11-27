@@ -43,7 +43,6 @@ const NotificationCenter: React.FC = () => {
   };
 
   const onDelete = async (id: number) => {
-    // Ocultar (soft-hide): llamar al endpoint DELETE que marca hidden=1 y eliminar localmente
     try {
       await deleteNotification(id);
       setItems((prev) => prev.filter((it) => it.id_notification !== id));
